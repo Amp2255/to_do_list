@@ -2,15 +2,16 @@ A simple CRUD (Create, Read, Update, Delete) web application built with Go and M
 This project demonstrates how to manage tasks in a to-do list using a RESTful API.
 
 ** Features
-Add new tasks
 
-Retrieve all tasks
+- Add new tasks
 
-Update existing tasks
+- Retrieve all tasks
 
-Delete tasks
+- Update existing tasks
 
-MongoDB integration for data persistence
+- Delete tasks
+
+- MongoDB integration for data persistence
 
 🛠️ Tech Stack
 Backend: Go (Golang)
