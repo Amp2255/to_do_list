@@ -16,7 +16,8 @@ func Connect() *mongo.Client {
 	var err error
 	var mongoClient *mongo.Client
 	ctx := context.Background()
-	ctx1, _ := context.WithTimeout(ctx, 45*time.Second)
+	ctx1, cancel := context.WithTimeout(ctx, 45*time.Second)
+	defer cancel()
 	mongoClient, err = mongo.Connect(ctx1, options.Client().ApplyURI(configs.LoadDbUrl()))
 	if err != nil {
 		fmt.Println("Mongo DB not connected : ", err)

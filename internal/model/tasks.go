@@ -1,7 +1,7 @@
 package model
 
 import (
-	"time"
+	"to_do_list/internal/utils"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -13,7 +13,5 @@ type Tasks struct {
 	Status      string             `json:"status,omitempty" validate:"required"`
 	Priority    string             `json:"priority,omitempty" validate:"required"`
 	//DueDate     primitive.DateTime `json:"duedate,omitempty"`
-	DueDate   time.Time `bson:"due_date,omitempty" json:"due_date,omitempty"`
-	CreatedAt time.Time `bson:"created_at" json:"created_at"`
-	UpdatedAt time.Time `bson:"updated_at" json:"updated_at"`
+	DueDate utils.DateOnly `bson:"due_date" json:"due_date"`
 }

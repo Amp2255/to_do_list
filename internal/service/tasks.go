@@ -36,6 +36,7 @@ func GetAllTasks(ctx *gin.Context) {
 			Message: "Error fetching data",
 			Error:   err.Error(),
 		})
+		return
 	} else {
 
 		for results.Next(ctx) {
@@ -46,6 +47,7 @@ func GetAllTasks(ctx *gin.Context) {
 					Message: "Couldnot find tasks",
 					Error:   err.Error(),
 				})
+				return
 			}
 			if err == nil {
 				tasksColl = append(tasksColl, task)
@@ -72,6 +74,7 @@ func GetAllTasksByFilter(contxt *gin.Context) {
 			Data:    tasksColl,
 			Error:   err.Error(),
 		})
+		return
 	} else {
 		//to find users by filter
 		filter := bson.M{}
@@ -93,6 +96,7 @@ func GetAllTasksByFilter(contxt *gin.Context) {
 				Message: "Error fetching data",
 				Error:   err.Error(),
 			})
+			return
 		}
 		defer results.Close(context.TODO())
 		for results.Next(contxt) {
@@ -116,12 +120,17 @@ func GetAllTasksByFilter(contxt *gin.Context) {
 			Message: "Task retrieved successfully",
 			Data:    tasksColl,
 		})
+		return
 
 	}
 }
 
 func CreateTasks(contxt *gin.Context) {
 	var anewTask model.Tasks
+	// if err := contxt.ShouldBindBodyWith(&anewTask, binding.JSON); err != nil {
+	// 	fmt.Println("%+v", err)
+	// }
+	// fmt.Println("%+v", anewTask)
 	if err := contxt.BindJSON(&anewTask); err != nil {
 		contxt.JSON(http.StatusBadRequest, utils.APIresponse{
 			Success: false,
@@ -133,8 +142,10 @@ func CreateTasks(contxt *gin.Context) {
 	}
 
 	anewTask.Id = primitive.NewObjectID()
+	fmt.Println("********** date after bindJSON", anewTask.DueDate)
 	results, err := tasksCollection.InsertOne(context.TODO(), anewTask)
 	if err != nil {
+		fmt.Println("********** error ", err.Error())
 		contxt.JSON(http.StatusInternalServerError, utils.APIresponse{
 			Success: false,
 			Message: "Error saving new task",
@@ -168,6 +179,7 @@ func UpdateATask(contxt *gin.Context) { ///tasks/:id
 
 	var reqBody model.Tasks
 	if err := contxt.Bind(&reqBody); err != nil {
+		fmt.Println("err != nil*********", err.Error())
 		contxt.JSON(http.StatusBadRequest, utils.APIresponse{
 			Success: false,
 			Message: "",
@@ -175,8 +187,8 @@ func UpdateATask(contxt *gin.Context) { ///tasks/:id
 			Error:   err.Error(),
 		})
 	} else {
-		reqBody.UpdatedAt = time.Now()
-		fmt.Println("reqBody to update :", reqBody)
+		//	reqBody.UpdatedAt = time.Now()
+		fmt.Println("reqBody to update :", reqBody.DueDate)
 		dataToUpdate := bson.M{
 			"$set": bson.M{
 				"title":       reqBody.Title,
@@ -184,7 +196,7 @@ func UpdateATask(contxt *gin.Context) { ///tasks/:id
 				"status":      reqBody.Status,
 				"priority":    reqBody.Priority,
 				"due_date":    reqBody.DueDate,
-				"updated_at":  reqBody.UpdatedAt,
+				//		"updated_at":  reqBody.UpdatedAt,
 			},
 		}
 

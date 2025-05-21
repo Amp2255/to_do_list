@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"to_do_list/internal/service"
 
 	"github.com/gin-gonic/gin"
@@ -12,7 +11,6 @@ func ViewAllTasks(contxt *gin.Context) {
 
 }
 func ViewTasksByFilter(ctx *gin.Context) {
-	fmt.Println("inside ViewTasksByFilter **************8")
 	service.GetAllTasksByFilter(ctx)
 }
 
@@ -21,7 +19,6 @@ func SaveTasks(ctx *gin.Context) {
 }
 
 func UpdateATask(ctx *gin.Context) {
-	fmt.Println("********** UpdateATask", ctx.Query("editingId"))
 	service.UpdateATask(ctx)
 }
 
